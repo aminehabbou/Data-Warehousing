@@ -1,0 +1,118 @@
+{
+  "name": "irbd",
+  "label": "IBRD Balance Sheet",
+  "description": "World Bank IBRD Balance Sheet FY 2010",
+  
+  "dimensions": [
+    {
+      "name": "account",
+      "label": "Account Hierarchy",
+      "description": "Hierarchical structure of the balance sheet",
+      "levels": [
+        {
+          "name": "category",
+          "label": "Category",
+          "key": "category",
+          "attributes": ["category"],
+          "cardinality": "low"
+        },
+        {
+          "name": "subcategory",
+          "label": "Subcategory",
+          "key": "subcategory",
+          "attributes": ["subcategory"],
+          "cardinality": "medium"
+        },
+        {
+          "name": "line_item",
+          "label": "Line Item",
+          "key": "line_item",
+          "attributes": ["line_item"],
+          "cardinality": "high"
+        }
+      ],
+      "hierarchies": [
+        {
+          "name": "default",
+          "levels": ["category", "subcategory", "line_item"]
+        }
+      ]
+    },
+    {
+      "name": "year",
+      "label": "Fiscal Year",
+      "description": "The fiscal year of the balance sheet",
+      "levels": [
+        {
+          "name": "year",
+          "label": "Year",
+          "key": "year",
+          "attributes": ["year"],
+          "cardinality": "low",
+          "role": "time"
+        }
+      ]
+    }
+  ],
+  
+  "cubes": [
+    {
+      "name": "irbd_balance",
+      "label": "IBRD Balance Sheet",
+      "description": "World Bank balance sheet data with dimensions and measures",
+      "fact": "irbd_balance",
+      "key": "id",
+      
+      "dimensions": [
+        "account",
+        "year"
+      ],
+      
+      "measures": [
+        {
+          "name": "amount",
+          "label": "Amount",
+          "description": "Balance sheet amount in US$ Millions",
+          "aggregates": ["sum", "min", "max"]
+        }
+      ],
+      
+      "aggregates": [
+        {
+          "name": "amount_sum",
+          "label": "Total Amount",
+          "description": "Sum of amounts",
+          "measure": "amount",
+          "function": "sum"
+        },
+        {
+          "name": "amount_min",
+          "label": "Minimum Amount",
+          "description": "Minimum amount in group",
+          "measure": "amount",
+          "function": "min"
+        },
+        {
+          "name": "amount_max",
+          "label": "Maximum Amount",
+          "description": "Maximum amount in group",
+          "measure": "amount",
+          "function": "max"
+        },
+        {
+          "name": "record_count",
+          "label": "Count",
+          "description": "Number of records",
+          "function": "count"
+        }
+      ],
+      
+      "mappings": {
+        "account.category": "category",
+        "account.subcategory": "subcategory",
+        "account.line_item": "line_item",
+        "year.year": "year"
+      }
+    }
+  ]
+}
