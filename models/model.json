@@ -1,0 +1,57 @@
+{
+    "name":"music_sales",
+    "description":"sales of music albums",
+    "dimensions":[
+        {"name":"genre", "label":"Genre"},
+        {"name":"artist","label":"Artist"},
+        {"name":"country","label":"Country"},
+        {"name":"year","label":"year"}
+    ],
+    "cubes": [
+        {
+            "name":"music_sales",
+            "description":"sales of music albums",
+            "fact":"music_sales",
+            "dimensions":["genre","artist","country","year"],
+            "measures":[
+                {
+                    "name":"extended_price",
+                    "aggregates":["sum","max","min"]
+                },
+                {
+                    "name":"quantity",
+                    "aggregates":["sum","max","min"]
+                }
+            ],
+            "details":[
+                {
+                    "name": "track_name", "label":"Track name"
+                }
+            ],
+            "aggregates":[
+                {
+                    "name":"revenue_sum",
+                    "function":"sum",
+                    "measure":"extended_price"
+                },
+                {
+                    "name":"max_revenue",
+                    "function":"max",
+                    "measure":"extended_price"
+                },
+                {
+                    "name":"revenue_min",
+                    "function":"min",
+                    "measure":"extended_price"
+                },
+                {
+                    "name":"quantity_sum",
+                    "function":"sum",
+                    "measure":"quantity"
+                }
+            ]
+
+        }
+    ]
+
+}
