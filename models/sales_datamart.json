@@ -1,0 +1,146 @@
+{
+    "name":"sales_datamart",
+    "description":"datamart for sales",
+    "dimensions":[
+        {
+            "name":"dim_product",
+            "label":"Product dimension",
+            "levels":[
+                {
+                    "name":"product_name",
+                    "label":"Name of the product",
+                    "attributes":["product_id","product_name"],
+                    "key":"product_name"
+                },
+                {
+                    "name":"category",
+                    "label":"Category of the product",
+                    "key":"category",
+                    "attributes":["category"]
+                }
+            ],
+            "hierarchies":[
+                {
+                    "name":"default",
+                    "levels":["category","product_name"]
+                }
+            ]
+
+        },
+        {
+            "name":"dim_customer",
+            "label":"Customer dimension",
+            "levels":[
+                {
+                    "name":"customer_name",
+                    "label":"Customer's name",
+                    "key":"customer_name",
+                    "attributes":["customer_id","customer_name"]
+
+                },
+                {
+                    "name":"country",
+                    "label":"Customer's country of residency",
+                    "key":"country",
+                    "attributes":["country"]
+                }
+            ],
+            "hierarchies":[
+                {
+                    "name":"default",
+                    "levels":["country","customer_name"]
+                }
+            ]
+        },
+        {
+            "name":"dim_date",
+            "label":"Data dimension",
+            "levels":[
+                {
+                    "name":"year",
+                    "label":"year",
+                    "key":"year",
+                    "attributes":["year"]
+                },
+                {
+                    "name":"quarter",
+                    "label":"quarter",
+                    "key":"quarter",
+                    "attributes":["quarter"]
+                },
+                {
+                    "name":"month",
+                    "label":"month",
+                    "key":"month",
+                    "attributes":["month"]
+                }
+            ],
+            "hierarchies":[
+                {
+                    "name":"default_year",
+                    "levels":["year","quarter","month"]
+                }
+            ]
+        }
+    ],
+    "cubes":[
+        {
+            "name":"sales_datamart",
+            "label":"sales_datamart",
+            "fact":"fact_sales",
+            "description":"sales datamart",
+            "dimensions":[
+                "dim_product",
+                "dim_customer",
+                "dim_date"
+            ],
+            "measures":[
+                {
+                    "name":"profit",
+                    "aggregates":["sum","min","max"]
+                },
+                {
+                    "name":"sales_amount",
+                    "aggregates":["sum","min","max"]
+                },
+                {
+                    "name":"quantity",
+                    "label":"Units sold",
+                    "aggregates":["sum","min","max"]
+                }
+            ],
+            "aggregates":[
+                {
+                    "name":"profit_sum",
+                    "function":"sum",
+                    "measure":"profit"
+                },
+                {
+                    "name":"revenue_sum",
+                    "function":"sum",
+                    "measure":"sales_amount"
+                },
+                {
+                    "name":"quantity_sum",
+                    "function":"sum",
+                    "measure":"quantity"
+                },
+                {
+                    "name":"order_count",
+                    "function":"count"
+                }
+            ],
+            "joins":[
+                {
+                    "master":"fact_sales.date_id", "detail":"dim_date.date_id"
+                },
+                {
+                    "master":"fact_sales.customer_id", "detail":"dim_customer.customer_id"
+                },
+                {
+                    "master":"fact_sales.product_id", "detail":"dim_product.product_id"
+                }
+            ]
+        }
+    ]
+}
